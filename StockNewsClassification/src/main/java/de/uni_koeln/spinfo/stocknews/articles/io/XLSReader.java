@@ -117,7 +117,7 @@ public class XLSReader {
 					articleRics.addAll(Arrays.asList(split));
 				}
 				
-				Article newArticle = new Article(index, timeStr,headline,text,articleRics,true);
+				Article newArticle = new Article(index, timeStr,headline,text.replaceAll("\n", " ").replaceAll("\t", " "),articleRics,true);
 				articles.add(newArticle);
 				tagsExtracted.addAll(newArticle.getTags());
 				

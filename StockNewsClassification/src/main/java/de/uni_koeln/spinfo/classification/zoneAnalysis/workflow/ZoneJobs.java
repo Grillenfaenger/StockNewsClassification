@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -47,6 +48,7 @@ import de.uni_koeln.spinfo.classification.zoneAnalysis.evaluation.ResultComparat
 import de.uni_koeln.spinfo.classification.zoneAnalysis.evaluation.ZoneEvaluator;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.helpers.SingleToMultiClassConverter;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.preprocessing.TrainingDataGenerator;
+import de.uni_koeln.spinfo.stocknews.classification.StockNewsTrainingDataGenerator;
 
 public class ZoneJobs {
 
@@ -138,6 +140,21 @@ public class ZoneJobs {
 			}
 		}
 		
+		return paragraphs;
+	}
+	
+	public List<ClassifyUnit> getCategorizedNewsFromFile(File trainingDataFile,
+			boolean treatEncoding) throws IOException, NumberFormatException, ParseException {
+		StockNewsTrainingDataGenerator tdg = new StockNewsTrainingDataGenerator(trainingDataFile, stmc.getNumberOfCategories(),
+				stmc.getNumberOfClasses(), stmc.getTranslations());
+		List<ClassifyUnit> paragraphs = tdg.getTrainingData();
+		
+		if(treatEncoding){
+			for (ClassifyUnit classifyUnit : paragraphs) {
+				String content = classifyUnit.getContent();
+				classifyUnit.setContent(EncodingProblemTreatment.normalizeEncoding(content));
+			}
+		}
 		return paragraphs;
 	}
 
@@ -640,5 +657,7 @@ public class ZoneJobs {
 	public SingleToMultiClassConverter getStmc() {
 		return stmc;
 	}
+
+	
 
 }

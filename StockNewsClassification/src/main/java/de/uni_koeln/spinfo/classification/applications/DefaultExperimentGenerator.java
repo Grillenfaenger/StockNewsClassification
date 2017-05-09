@@ -2,6 +2,7 @@ package de.uni_koeln.spinfo.classification.applications;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,7 +55,7 @@ public class DefaultExperimentGenerator {
 	// END
 	/////////////////////////////
 
-	public static void main(String[] args) throws IOException, ClassNotFoundException {
+	public static void main(String[] args) throws IOException, ClassNotFoundException, NumberFormatException, ParseException {
 
 		List<Integer> evaluationCategories = new ArrayList<Integer>();
 		evaluationCategories.add(1);

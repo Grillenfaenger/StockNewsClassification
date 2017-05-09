@@ -2,6 +2,7 @@ package de.uni_koeln.spinfo.classification.applications;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class SingleExperimentExecution {
 	// END
 	/////////////////////////////
 
-	public static void main(String[] args) throws ClassNotFoundException, IOException {
+	public static void main(String[] args) throws ClassNotFoundException, IOException, NumberFormatException, ParseException {
 
 		// Translations
 		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();

@@ -7,22 +7,29 @@ import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 import de.uni_koeln.spinfo.stocknews.stocks.data.StockTable;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 
-public class VerySimpleStockEvaluator extends StockEvaluatur {
+public class VerySimpleStockEvaluator extends AbstractStockEvaluator {
 
-	private CompanyStockTables cst;
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
+	protected CompanyStockTables cst = null;
+//	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
 	
 	public VerySimpleStockEvaluator(CompanyStockTables cst){
 		this.cst = cst;
 	}
 	
+	public VerySimpleStockEvaluator() {
+	}
+
 	@Override
-	public boolean getEvaluation(String ric, LocalDateTime articleDate) throws NoQuoteDataException {
+	public int getEvaluation(String ric, LocalDateTime articleDate) throws NoQuoteDataException {
+		
+		if(cst == null){
+			throw new NoQuoteDataException("No Quote Data has been loaded."); 
+		}
 		
 		LocalDate articleDay = articleDate.toLocalDate();
 		StockTable ricQuotes = cst.companyStocks.get(ric);
 		
-		if(ricQuotes ==null){
+		if(ricQuotes == null){
 			throw new NoQuoteDataException("No Quote Data for " + ric);
 		}
 		
@@ -34,8 +41,8 @@ public class VerySimpleStockEvaluator extends StockEvaluatur {
 		} else {
 			System.out.println("evaluation: false, " + courseAfter + " <= " + courseBefore);
 		}
-		if(courseAfter-courseBefore<=0.0) return false;
-		else return true;
+		if(courseAfter-courseBefore<=0.0) return 1;
+		else return 2;
 	}
 
 	private float getcourseBefore(String ric, LocalDate articleDay, StockTable ricQuotes) throws NoQuoteDataException {

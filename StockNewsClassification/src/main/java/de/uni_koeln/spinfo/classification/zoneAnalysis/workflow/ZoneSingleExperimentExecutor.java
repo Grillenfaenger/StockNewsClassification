@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +19,11 @@ public class ZoneSingleExperimentExecutor {
 
 	public static ExperimentResult crossValidate(ExperimentConfiguration expConfig, ZoneJobs jobs,
 			File trainingDataFile, int numCategories, int numClasses, Map<Integer, List<Integer>> translations,
-			boolean preClassify, List<Integer> evaluationCategories) throws IOException {
+			boolean preClassify, List<Integer> evaluationCategories) throws IOException, NumberFormatException, ParseException {
 		long before = System.nanoTime();
 		// prepare classifyUnits...
 		List<ClassifyUnit> paragraphs = null;
-		paragraphs = jobs.getCategorizedParagraphsFromFile(expConfig.getDataFile(),
+		paragraphs = jobs.getCategorizedNewsFromFile(expConfig.getDataFile(),
 				expConfig.getFeatureConfiguration().isTreatEncoding());
 
 		long after = System.nanoTime();
