@@ -20,7 +20,15 @@ public class CompanyStockTables {
 	public float courseRelativeToIndex(String ric, String index, LocalDate date) throws NoQuoteDataException{
 		float toIndex;
 		try {
-			toIndex = companyStocks.get(ric).stockTable.get(date).relativePerformance()-companyStocks.get(index).stockTable.get(date).relativePerformance();
+			float ricPerf = companyStocks.get(ric).stockTable.get(date).relativePerformance();
+			float indexPerf = companyStocks.get(index).stockTable.get(date).relativePerformance();
+			toIndex =  ricPerf - indexPerf;
+			
+			if(toIndex>0){
+				System.out.println(ric + ": " + ricPerf + " > " + index + ": " +indexPerf);
+			} else {
+				System.out.println(ric + ": " + ricPerf + " <= " + index + ": " +indexPerf);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new NoQuoteDataException("No Quote Data for " + ric + " or " + index + " on " + date.toString()+"/n Update quote data first!");
