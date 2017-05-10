@@ -9,7 +9,6 @@ import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 
 public class VerySimpleStockEvaluator extends AbstractStockEvaluator {
 
-	protected CompanyStockTables cst = null;
 //	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
 	
 	public VerySimpleStockEvaluator(CompanyStockTables cst){
@@ -33,8 +32,8 @@ public class VerySimpleStockEvaluator extends AbstractStockEvaluator {
 			throw new NoQuoteDataException("No Quote Data for " + ric);
 		}
 		
-		float courseBefore = getcourseBefore(ric, articleDay, ricQuotes);
-		float courseAfter = getCourseAfter(ric, articleDay, ricQuotes);
+		float courseBefore = CourseTools.getcourseBefore(ric, articleDay, ricQuotes);
+		float courseAfter = CourseTools.getCourseAfter(ric, articleDay, ricQuotes);
 		
 		if(courseAfter > courseBefore){
 			System.out.println("evaluation: true, "+ courseAfter + " > " + courseBefore);
@@ -44,50 +43,5 @@ public class VerySimpleStockEvaluator extends AbstractStockEvaluator {
 		if(courseAfter-courseBefore<=0.0) return 1;
 		else return 2;
 	}
-
-	private float getcourseBefore(String ric, LocalDate articleDay, StockTable ricQuotes) throws NoQuoteDataException {
-		
-		LocalDate justBefore = ricQuotes.stockTable.lowerKey(articleDay);
-		if(justBefore.equals(null)){
-			throw new NoQuoteDataException("No Quote Data for " + ric + " on " + articleDay.toString() + "/n Update quote data first!");
-		}
-		return ricQuotes.stockTable.get(justBefore).getClose();
-	}
-
-	private float getCourseAfter(String ric, LocalDate articleDay, StockTable ricQuotes) throws NoQuoteDataException {
-		LocalDate justAfter = ricQuotes.stockTable.higherKey(articleDay);
-		if(justAfter.equals(null)){
-			throw new NoQuoteDataException("No Quote Data for " + ric + " on " + articleDay.toString()+"/n Update quote data first!");
-		}
-		return ricQuotes.stockTable.get(justAfter).getOpen();
-	}
-	
-//	@SuppressWarnings("deprecation")
-//	private boolean whileOpen(LocalDateTime news) {
-//		if(!isBeforeOpening(news) && !isAfterClosing(news)) return true;
-//		else return false;
-//	}
-//
-//	private boolean isAfterClosing(LocalDateTime news) {
-//		
-//		int closingHour = 17;
-//		int closingMinutes = 30;
-//		
-//		if(news.get(ChronoField.HOUR_OF_DAY) > closingHour) {return true;}
-//		else if(news.get(ChronoField.HOUR_OF_DAY) == closingHour && news.get(ChronoField.MINUTE_OF_HOUR) > closingMinutes ){ return true;}
-//		else return false;
-//	}
-//
-//	private boolean isBeforeOpening(LocalDateTime news) {
-//		int openingHour = 9;
-//		
-//		if(news.get(ChronoField.HOUR_OF_DAY) < openingHour) return true;
-//		else return false;
-//	}
-
-
-	
-	
-	
 
 }

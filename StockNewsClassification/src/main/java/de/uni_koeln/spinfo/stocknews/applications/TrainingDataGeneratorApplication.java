@@ -12,6 +12,7 @@ import java.util.Set;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing.Keyword;
 import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockEvaluator;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.IndexNormalizedEvaluator;
 import de.uni_koeln.spinfo.stocknews.evaluation.processing.VerySimpleStockEvaluator;
 import de.uni_koeln.spinfo.stocknews.utils.FileUtils;
 import de.uni_koeln.spinfo.stocknews.stocks.io.QuoteCSVReader;
@@ -31,9 +32,10 @@ public class TrainingDataGeneratorApplication {
 		
 		// initialize StockEvaluator
 		AbstractStockEvaluator stEval = new VerySimpleStockEvaluator();
+		AbstractStockEvaluator indexEval = new IndexNormalizedEvaluator("^GDAXI");
 
 		StockNewsTrainingDataGenerator tdg = new StockNewsTrainingDataGenerator(tdFile);
-		List<TrainingData> generateTrainingData = tdg.generateTrainingData(false,"output/quotes",stEval);
+		List<TrainingData> generateTrainingData = tdg.generateTrainingData(false,"output/quotes",indexEval, "indexNormalizedTrainingData");
 	}
 
 	

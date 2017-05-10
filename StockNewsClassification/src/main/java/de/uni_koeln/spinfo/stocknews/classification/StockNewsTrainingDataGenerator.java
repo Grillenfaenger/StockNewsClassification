@@ -171,7 +171,7 @@ public class StockNewsTrainingDataGenerator {
 		return trainingData;
 	}
 	
-	public List<TrainingData> generateTrainingData(boolean singleRicOnly, String quoteDir, AbstractStockEvaluator stEval) throws NumberFormatException, IOException, ParseException{
+	public List<TrainingData> generateTrainingData(boolean singleRicOnly, String quoteDir, AbstractStockEvaluator stEval, String outputFilename) throws NumberFormatException, IOException, ParseException{
 		// getArticles
 		List<Article> articles = XLSReader.getArticlesFromXlsFile(tdFile.getAbsolutePath());
 		
@@ -190,9 +190,15 @@ public class StockNewsTrainingDataGenerator {
 		
 		List<String> remainingRics = new ArrayList<String>();
 		remainingRics.addAll(orderedNews.keySet());
+		String dax = "^GDAXI";
+		remainingRics.add(dax);
 		
 		//	loadQuotes
 		CompanyStockTables cst = QuoteCSVReader.readStockCoursesIntoMap(quoteDir, remainingRics);
+		
+		System.out.println(cst.companyStocks.get(dax));
+		System.out.println(cst.companyStocks.get("ONXX.O"));
+		
 		
 		stEval.setCst(cst);
 		
@@ -219,7 +225,7 @@ public class StockNewsTrainingDataGenerator {
 		for(TrainingData td : trainingData){
 			printableTd.add(td.toTSVString());
 		}
-		FileUtils.printList(printableTd, "output/classification/", "trainingData", ".txt");
+		FileUtils.printList(printableTd, "output/classification/", outputFilename, ".txt");
 		
 		return trainingData;
 	}

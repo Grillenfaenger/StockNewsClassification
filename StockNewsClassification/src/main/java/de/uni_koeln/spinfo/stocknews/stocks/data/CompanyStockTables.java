@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
+
 public class CompanyStockTables {
 	
 	/**
@@ -15,8 +17,14 @@ public class CompanyStockTables {
 		companyStocks = new HashMap<String,StockTable>();
 	}
 	
-	public float courseRelativeToIndex(String ric, String index, LocalDate date){
-		float toIndex = companyStocks.get(ric).stockTable.get(date).relativePerformance()-companyStocks.get(index).stockTable.get(date).relativePerformance();
+	public float courseRelativeToIndex(String ric, String index, LocalDate date) throws NoQuoteDataException{
+		float toIndex;
+		try {
+			toIndex = companyStocks.get(ric).stockTable.get(date).relativePerformance()-companyStocks.get(index).stockTable.get(date).relativePerformance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new NoQuoteDataException("No Quote Data for " + ric + " or " + index + " on " + date.toString()+"/n Update quote data first!");
+		}
 		return toIndex;
 	}
 

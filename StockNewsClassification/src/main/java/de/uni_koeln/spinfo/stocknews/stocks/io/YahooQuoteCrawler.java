@@ -5,12 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.jsoup.Connection.Response;
 
 import de.uni_koeln.spinfo.stocknews.stocks.data.Frequency;
+import de.uni_koeln.spinfo.stocknews.utils.FileUtils;
 
 import org.jsoup.Jsoup;
 
@@ -51,6 +54,41 @@ public class YahooQuoteCrawler {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+	
+	public static void getCourseFromYahoo(List<String> rics, Calendar start, Calendar end, Frequency frq) throws IOException{
+		
+		// List of rics for which NO DATA could be found
+		List<String> nodata = new ArrayList<String>();
+		// List of rics for which data had been downloaded
+		List<String> data = new ArrayList<String>();
+		
+		System.out.println(start.getMaximum(Calendar.MONTH));
+		System.out.println(start.get(Calendar.DAY_OF_MONTH));
+		System.out.println(start.get(Calendar.YEAR));
+		
+		System.out.println(end.get(Calendar.MONTH));
+		System.out.println(end.get(Calendar.DAY_OF_MONTH));
+		System.out.println(end.get(Calendar.YEAR));
+		
+		// Stocks traded on NYSE are listed without .N suffix on yahoo finaces
+		for (String ric : rics) {
+			if(ric.endsWith(".N")){
+				ric = ric.substring(0, ric.length()-2);
+			}
+			System.out.println(ric);
+			if(YahooQuoteCrawler.getQuoteTable(ric, start, end, frq)){
+				data.add(ric);
+			} else {
+				nodata.add(ric);
+			}
+		}
+		
+		System.out.println("Downloaded quotes for "+  data.size() + " companies");
+		FileUtils.printList(data, "output/", "data", ".txt");
+		System.out.println("Unable to find any data for " + nodata.size() + " Rics.");
+		FileUtils.printList(nodata, "output/", "nodata", ".txt");
+		
 	}
 	
 	public static String buildFileName(String ric, Calendar start, Calendar end){
