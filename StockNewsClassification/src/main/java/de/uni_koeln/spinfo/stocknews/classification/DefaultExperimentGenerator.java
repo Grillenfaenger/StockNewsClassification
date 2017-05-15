@@ -43,7 +43,7 @@ public class DefaultExperimentGenerator {
 	// APP-CONFIGURATION
 	/////////////////////////////
 
-	static File trainingDataFile = new File("output/classification/indexNoramlizedTrainingData.txt");
+	static File trainingDataFile = new File("output/classification/indexNormalizedTrainingData.txt");
 
 	static File resultsOutputFile = new File("output/classification/defaultResults/preClassified/indexNormalized");
 

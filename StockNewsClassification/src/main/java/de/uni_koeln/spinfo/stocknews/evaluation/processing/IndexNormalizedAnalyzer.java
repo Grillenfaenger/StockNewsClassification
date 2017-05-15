@@ -7,16 +7,16 @@ import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 import de.uni_koeln.spinfo.stocknews.stocks.data.StockTable;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 
-public class IndexNormalizedEvaluator extends AbstractStockEvaluator {
+public class IndexNormalizedAnalyzer extends AbstractStockAnalyzer {
 	
 	private String indexRic;
 	
-	public IndexNormalizedEvaluator(CompanyStockTables cst, String indexRic){
+	public IndexNormalizedAnalyzer(CompanyStockTables cst, String indexRic){
 		super(cst);
 		this.indexRic = indexRic;
 	}
 
-	public IndexNormalizedEvaluator(String indexRic){
+	public IndexNormalizedAnalyzer(String indexRic){
 		super();
 		this.indexRic = indexRic;
 	}

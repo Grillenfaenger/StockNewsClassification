@@ -11,7 +11,7 @@ import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing.Keyword;
 import de.uni_koeln.spinfo.stocknews.articles.io.XLSReader;
 
-public class Application {
+public class DepricatedApplication {
 
 	public static void main(String[] args) throws Exception {
 	

@@ -7,15 +7,25 @@ import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 import de.uni_koeln.spinfo.stocknews.stocks.data.StockTable;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 
-public class VerySimpleStockEvaluator extends AbstractStockEvaluator {
+/**
+ * A baseline analysis of stock quotation. Provides an evaluation of the stock quotation around a given date. 
+ * The opening price of the subsequent day is compared to the closing price of the previous day.
+ * 
+ * class 1: course if lower or same as before
+ * class 2: course rose
+ * 
+ * @author avogt
+ *
+ */
+public class VerySimpleStockAnalyzer extends AbstractStockAnalyzer {
 
 //	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
 	
-	public VerySimpleStockEvaluator(CompanyStockTables cst){
+	public VerySimpleStockAnalyzer(CompanyStockTables cst){
 		this.cst = cst;
 	}
 	
-	public VerySimpleStockEvaluator() {
+	public VerySimpleStockAnalyzer() {
 	}
 
 	@Override

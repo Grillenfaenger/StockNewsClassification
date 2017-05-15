@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import de.uni_koeln.spinfo.stocknews.articles.data.Article;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
-import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockEvaluator;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockAnalyzer;
 
 public class TrainingData {
 	
@@ -19,7 +19,7 @@ public class TrainingData {
 	private LocalDateTime date;
 	private String ric;
 	
-	public TrainingData(String ric, Article article, AbstractStockEvaluator eval) throws NoQuoteDataException{
+	public TrainingData(String ric, Article article, AbstractStockAnalyzer eval) throws NoQuoteDataException{
 		this.id = UUID.randomUUID();
 		article.setId(id);
 		this.content = article.getContent();

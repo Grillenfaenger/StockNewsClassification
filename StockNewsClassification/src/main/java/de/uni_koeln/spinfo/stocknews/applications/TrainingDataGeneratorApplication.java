@@ -11,9 +11,9 @@ import java.util.Set;
 
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing.Keyword;
-import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockEvaluator;
-import de.uni_koeln.spinfo.stocknews.evaluation.processing.IndexNormalizedEvaluator;
-import de.uni_koeln.spinfo.stocknews.evaluation.processing.VerySimpleStockEvaluator;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockAnalyzer;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.IndexNormalizedAnalyzer;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.VerySimpleStockAnalyzer;
 import de.uni_koeln.spinfo.stocknews.utils.FileUtils;
 import de.uni_koeln.spinfo.stocknews.stocks.io.QuoteCSVReader;
 import de.uni_koeln.spinfo.stocknews.articles.io.XLSReader;
@@ -31,8 +31,8 @@ public class TrainingDataGeneratorApplication {
 
 		
 		// initialize StockEvaluator
-		AbstractStockEvaluator stEval = new VerySimpleStockEvaluator();
-		AbstractStockEvaluator indexEval = new IndexNormalizedEvaluator("^GDAXI");
+		AbstractStockAnalyzer stEval = new VerySimpleStockAnalyzer();
+		AbstractStockAnalyzer indexEval = new IndexNormalizedAnalyzer("^GDAXI");
 
 		StockNewsTrainingDataGenerator tdg = new StockNewsTrainingDataGenerator(tdFile);
 		List<TrainingData> generateTrainingData = tdg.generateTrainingData(false,"output/quotes",indexEval, "indexNormalizedTrainingData");

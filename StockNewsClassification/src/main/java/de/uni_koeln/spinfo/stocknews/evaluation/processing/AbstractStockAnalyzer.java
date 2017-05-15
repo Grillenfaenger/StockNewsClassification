@@ -6,13 +6,13 @@ import java.util.Date;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 
-public abstract class AbstractStockEvaluator {
+public abstract class AbstractStockAnalyzer {
 	
 	protected CompanyStockTables cst;
 	
-	public AbstractStockEvaluator(){};
+	public AbstractStockAnalyzer(){};
 	
-	protected AbstractStockEvaluator(CompanyStockTables cst){
+	protected AbstractStockAnalyzer(CompanyStockTables cst){
 		this.cst = cst;
 	}
 

@@ -24,8 +24,8 @@ import de.uni_koeln.spinfo.stocknews.articles.io.XLSReader;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing.Keyword;
 import de.uni_koeln.spinfo.stocknews.evaluation.data.TrainingData;
-import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockEvaluator;
-import de.uni_koeln.spinfo.stocknews.evaluation.processing.VerySimpleStockEvaluator;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockAnalyzer;
+import de.uni_koeln.spinfo.stocknews.evaluation.processing.VerySimpleStockAnalyzer;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 import de.uni_koeln.spinfo.stocknews.stocks.io.QuoteCSVReader;
@@ -141,7 +141,7 @@ public class StockNewsTrainingDataGenerator {
 		CompanyStockTables cst = QuoteCSVReader.readStockCoursesIntoMap(quoteDir, remainingRics);
 		
 		// initialize StockEvaluator
-		AbstractStockEvaluator stEval = new VerySimpleStockEvaluator(cst);
+		AbstractStockAnalyzer stEval = new VerySimpleStockAnalyzer(cst);
 		
 		// generate TrainingData
 		List<TrainingData> trainingData = new ArrayList<TrainingData>();
@@ -171,7 +171,7 @@ public class StockNewsTrainingDataGenerator {
 		return trainingData;
 	}
 	
-	public List<TrainingData> generateTrainingData(boolean singleRicOnly, String quoteDir, AbstractStockEvaluator stEval, String outputFilename) throws NumberFormatException, IOException, ParseException{
+	public List<TrainingData> generateTrainingData(boolean singleRicOnly, String quoteDir, AbstractStockAnalyzer stEval, String outputFilename) throws NumberFormatException, IOException, ParseException{
 		// getArticles
 		List<Article> articles = XLSReader.getArticlesFromXlsFile(tdFile.getAbsolutePath());
 		
