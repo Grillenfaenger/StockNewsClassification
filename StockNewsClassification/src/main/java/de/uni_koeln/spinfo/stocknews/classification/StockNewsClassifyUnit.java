@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import de.uni_koeln.spinfo.classification.zoneAnalysis.data.ZoneClassifyUnit;
+import de.uni_koeln.spinfo.stocknews.articles.data.Article;
 
 
 public class StockNewsClassifyUnit extends ZoneClassifyUnit {
@@ -22,6 +23,11 @@ public class StockNewsClassifyUnit extends ZoneClassifyUnit {
 		this(content, ric, date, UUID.randomUUID());
 		this.ric = ric;
 		this.date = date;
+	}
+	
+	public StockNewsClassifyUnit(Article article, UUID id) {
+		super(article.getContent(), id);
+		article.setId(id);
 	}
 	
 	public String toString(){

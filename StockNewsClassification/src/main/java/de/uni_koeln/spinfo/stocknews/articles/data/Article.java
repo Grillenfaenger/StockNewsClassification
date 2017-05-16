@@ -160,9 +160,14 @@ public class Article implements Comparable<Article> {
 
 
 	@Override
+//	public boolean equals(Object o) {
+//		if(o instanceof Article){
+//			return index.equals(((Article) o).getIndex());
+//		} else return false;
+//	}
 	public boolean equals(Object o) {
 		if(o instanceof Article){
-			return index.equals(((Article) o).getIndex());
+			return id.equals(((Article) o).getIndex());
 		} else return false;
 	}
 
@@ -176,6 +181,11 @@ public class Article implements Comparable<Article> {
 		ZonedDateTime zdt = date.atZone(ZoneOffset.UTC);
 		Long millis = zdt.toInstant().toEpochMilli();
 		return millis;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+		
 	}
 	
 }
