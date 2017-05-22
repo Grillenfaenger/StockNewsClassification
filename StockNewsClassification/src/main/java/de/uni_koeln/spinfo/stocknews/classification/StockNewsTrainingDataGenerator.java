@@ -85,13 +85,13 @@ public class StockNewsTrainingDataGenerator {
 		if (classifiedData.isEmpty()) {
 			classifiedData = new ArrayList<ClassifyUnit>();
 			
-			List<TrainingData> trainingData = readTrainingData();
+			List<TrainingData> trainingData = readTrainingData(tdFile);
 			classifiedData = trainingDataToCU(trainingData);
 		}	
 		return classifiedData;
 	}
 	
-	private List<TrainingData> readTrainingData() throws IOException {
+	public static List<TrainingData> readTrainingData(File tdFile) throws IOException {
 		List<TrainingData> tds = new ArrayList<TrainingData>();
 		
 		List<String> tdStrings = FileUtils.fileToList(tdFile.getAbsolutePath());

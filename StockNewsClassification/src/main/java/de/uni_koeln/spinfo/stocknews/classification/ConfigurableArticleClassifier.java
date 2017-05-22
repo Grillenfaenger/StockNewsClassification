@@ -53,7 +53,10 @@ public class ConfigurableArticleClassifier{
 	}
 
 	private List<ClassifyUnit> classify(ExperimentConfiguration config) throws IOException, SQLException, ClassNotFoundException, NumberFormatException, ParseException {
-		// get trainingdata from file (and db)
+		
+		List<ClassifyUnit> results = new ArrayList<ClassifyUnit>();
+		
+		// get trainingdata from file
 		File trainingDataFile = new File(trainingDataFileName);
 		List<ClassifyUnit> trainingData = new ArrayList<ClassifyUnit>();
 		trainingData = jobs.getCategorizedNewsFromFile(trainingDataFile, config.getFeatureConfiguration().isTreatEncoding());
@@ -77,47 +80,56 @@ public class ConfigurableArticleClassifier{
 			jobs.exportModel(config.getModelFile(), model);
 		}
 		
-		// if treat enc
-		if (config.getFeatureConfiguration().isTreatEncoding()) {
-			for(Article art : articles) {
+		for(Article art: articles){
+			// if treat enc
+			if (config.getFeatureConfiguration().isTreatEncoding()) {
 				art.setContent(EncodingProblemTreatment.normalizeEncoding(art.getContent()));
 			}
-		}
-		
-		List<ClassifyUnit> classifyUnits = new ArrayList<ClassifyUnit>();
-		for(Article art : articles){
+			
+			List<ClassifyUnit> classifyUnits = new ArrayList<ClassifyUnit>();
 			ZoneClassifyUnit zcu = new StockNewsClassifyUnit(art, UUID.randomUUID());
 			classifyUnits.add(zcu);
-		}
-		
-		// prepare ClassifyUnits
-		classifyUnits = jobs.initializeClassifyUnits(classifyUnits);
-		classifyUnits = jobs.setFeatures(classifyUnits, config.getFeatureConfiguration(), false);
-		classifyUnits = jobs.setFeatureVectors(classifyUnits, config.getFeatureQuantifier(), model.getFUOrder());
+			
+			// prepare ClassifyUnits
+			classifyUnits = jobs.initializeClassifyUnits(classifyUnits);
+			classifyUnits = jobs.setFeatures(classifyUnits, config.getFeatureConfiguration(), false);
+			classifyUnits = jobs.setFeatureVectors(classifyUnits, config.getFeatureQuantifier(), model.getFUOrder());
 
-		// 2. Classify
-		Map<ClassifyUnit, boolean[]> classified = jobs.classify(classifyUnits, config, model);
-		classified = jobs.translateClasses(classified);
+			// 2. Classify
+			Map<ClassifyUnit, boolean[]> classified = jobs.classify(classifyUnits, config, model);
+			classified = jobs.translateClasses(classified);
 
-		List<ClassifyUnit> results = new ArrayList<ClassifyUnit>();
-		
-		for (ClassifyUnit cu : classified.keySet()) {
-			((ZoneClassifyUnit) cu).setClassIDs(classified.get(cu));
+			
+			
+			for (ClassifyUnit cu : classified.keySet()) {
+				((ZoneClassifyUnit) cu).setClassIDs(classified.get(cu));
 
-			boolean[] ids = ((ZoneClassifyUnit) cu).getClassIDs();
-			boolean b = false;
-			for (int i = 0; i < ids.length; i++) {
-				if (ids[i]) {
-					if (b) {
-						//System.out.print("& " + (i + 1));
-					} else {
-						//System.out.println((i + 1));
+				boolean[] ids = ((ZoneClassifyUnit) cu).getClassIDs();
+				boolean b = false;
+				for (int i = 0; i < ids.length; i++) {
+					if (ids[i]) {
+						if (b) {
+							//System.out.print("& " + (i + 1));
+						} else {
+							//System.out.println((i + 1));
+						}
+						b = true;
 					}
-					b = true;
 				}
-			}
-			results.add(cu);
-		}			
+				
+				System.out.println(art.printComplete());
+				int classi = ((ZoneClassifyUnit) cu).getActualClassID();
+				
+				if(classi == 2) {
+					System.out.println("steigt");
+				}
+				else if(classi == 1) {
+					System.out.println("fällt");
+				}
+				results.add(cu);
+				
+			}			
+		}
 		return results;		
 	}
 

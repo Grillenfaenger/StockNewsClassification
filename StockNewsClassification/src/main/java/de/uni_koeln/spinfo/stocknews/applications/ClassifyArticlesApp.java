@@ -47,7 +47,8 @@ public class ClassifyArticlesApp {
 		
 		List<Article> articles = XLSReader.getArticlesFromXlsFile(inputFile);
 		
-		articles = articles.subList(0, 10);
+		System.out.println(articles.size());
+		articles = articles.subList(0, 7000);
 		
 		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();
 		List<Integer> categories = new ArrayList<Integer>();
@@ -61,13 +62,17 @@ public class ClassifyArticlesApp {
 		
 		List<ClassifyUnit> classified = cac.classify(null);
 		
+		int steigt = 0;
+		
 		for(ClassifyUnit cu : classified){
-			ZoneClassifyUnit zcu = (ZoneClassifyUnit)cu;
-				System.out.println(zcu.getContent());
-				if(zcu.getActualClassID() == 2) {System.out.println("steigt");}
-				else if(zcu.getActualClassID() == 2) {System.out.println("fällt");}
-		}
+			int classi = ((ZoneClassifyUnit) cu).getActualClassID();
 			
+			if(classi == 2) {
+				steigt++;
+			}
+		}
+		System.out.println(articles.size());
+		System.out.println(steigt + " steigende Klassifikationen");
 	}
 	
 
