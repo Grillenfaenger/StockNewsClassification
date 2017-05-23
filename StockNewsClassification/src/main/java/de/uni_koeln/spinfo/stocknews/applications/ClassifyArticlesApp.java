@@ -14,7 +14,7 @@ import de.uni_koeln.spinfo.classification.zoneAnalysis.data.ZoneClassifyUnit;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.helpers.SingleToMultiClassConverter;
 import de.uni_koeln.spinfo.stocknews.articles.data.Article;
 import de.uni_koeln.spinfo.stocknews.articles.io.XLSReader;
-import de.uni_koeln.spinfo.stocknews.classification.ConfigurableArticleClassifier;
+import de.uni_koeln.spinfo.stocknews.classification.workflow.ConfigurableArticleClassifier;
 import de.uni_koeln.spinfo.stocknews.classification.StockNewsClassifyUnit;
 
 public class ClassifyArticlesApp {

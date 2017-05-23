@@ -1,4 +1,4 @@
-package de.uni_koeln.spinfo.stocknews.classification;
+package de.uni_koeln.spinfo.stocknews.classification.workflow;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,6 +29,7 @@ import de.uni_koeln.spinfo.classification.zoneAnalysis.helpers.SingleToMultiClas
 import de.uni_koeln.spinfo.classification.zoneAnalysis.workflow.ExperimentSetupUI;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.workflow.ZoneJobs;
 import de.uni_koeln.spinfo.stocknews.articles.data.Article;
+import de.uni_koeln.spinfo.stocknews.classification.StockNewsClassifyUnit;
 
 public class ConfigurableArticleClassifier{
 	

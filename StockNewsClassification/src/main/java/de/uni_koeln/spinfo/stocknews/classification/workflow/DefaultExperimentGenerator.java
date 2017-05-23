@@ -1,4 +1,4 @@
-package de.uni_koeln.spinfo.stocknews.classification;
+package de.uni_koeln.spinfo.stocknews.classification.workflow;
 
 import java.io.File;
 import java.io.IOException;
