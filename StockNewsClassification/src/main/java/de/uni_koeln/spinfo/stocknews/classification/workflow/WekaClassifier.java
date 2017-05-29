@@ -209,9 +209,19 @@ public class WekaClassifier {
 		}
 			
 		TreeMap<Integer,ClassifyUnit> cMap = new TreeMap<Integer,ClassifyUnit>();
+		HashMap<Integer,ClassifyUnit> tempMap = new HashMap<Integer,ClassifyUnit>();
+		int i = 0;
 		for(Integer key : bowStrings.keySet()){
 			System.out.println(key);
+			tempMap.put(key,results.get(i));
+			i++;
 		}
+		cMap.putAll(tempMap);
+		
+		for(Integer key: bowStrings.keySet()){
+			System.out.println(key + " ," + bowStrings.get(key) + " ; \nresult: " + cMap.get(key).getContent());
+		}
+		
 		
 		return cMap;		
 	}

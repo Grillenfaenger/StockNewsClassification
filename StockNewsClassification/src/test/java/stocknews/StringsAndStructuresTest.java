@@ -34,7 +34,7 @@ public class StringsAndStructuresTest {
 		
 		String tdFile = "input/News_filtered_DE_1.1.xls";
 		List<Article> articles = XLSReader.getArticlesFromXlsFile(tdFile);
-		articles = articles.subList(0, 20);
+		articles = articles.subList(0, 50);
 		
 		TreeMap<Integer,TreeMap<String,Integer>> bows = new TreeMap<Integer,TreeMap<String,Integer>>();
 		for(Article art : articles){
