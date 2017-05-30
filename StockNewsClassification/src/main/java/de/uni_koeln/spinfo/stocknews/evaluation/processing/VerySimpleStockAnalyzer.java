@@ -3,8 +3,13 @@ package de.uni_koeln.spinfo.stocknews.evaluation.processing;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 import de.uni_koeln.spinfo.stocknews.stocks.data.StockTable;
+import de.uni_koeln.spinfo.stocknews.stocks.data.Trend;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 
 /**
@@ -19,13 +24,15 @@ import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
  */
 public class VerySimpleStockAnalyzer extends AbstractStockAnalyzer {
 
-//	static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEEE");
-	
 	public VerySimpleStockAnalyzer(CompanyStockTables cst){
-		this.cst = cst;
+		super(cst);
 	}
 	
-	public VerySimpleStockAnalyzer() {
+	public VerySimpleStockAnalyzer() {}
+	
+	@Override
+	public Map<Trend, Integer> defineEvaluationClasses() {
+		return getStandardClasses();
 	}
 
 	@Override
@@ -50,8 +57,10 @@ public class VerySimpleStockAnalyzer extends AbstractStockAnalyzer {
 		} else {
 			System.out.println("evaluation: false, " + courseAfter + " <= " + courseBefore);
 		}
-		if(courseAfter-courseBefore<=0.0) return 1;
-		else return 2;
+		if(courseAfter-courseBefore<=0.0) return classes.get(Trend.FALLING);
+		else return classes.get(Trend.RISING);
 	}
+
+
 
 }

@@ -196,9 +196,8 @@ public class StockNewsTrainingDataGenerator {
 		//	loadQuotes
 		CompanyStockTables cst = QuoteCSVReader.readStockCoursesIntoMap(quoteDir, remainingRics);
 		
-		System.out.println(cst.companyStocks.get(dax));
-		System.out.println(cst.companyStocks.get("ONXX.O"));
-		
+//		System.out.println(cst.companyStocks.get(dax));
+//		System.out.println(cst.companyStocks.get("ONXX.O"));
 		
 		stEval.setCst(cst);
 		
@@ -226,6 +225,8 @@ public class StockNewsTrainingDataGenerator {
 			printableTd.add(td.toTSVString());
 		}
 		FileUtils.printList(printableTd, "output/classification/", outputFilename, ".txt");
+		
+		FileUtils.printMap(stEval.getClasses(), "output/classification/", outputFilename+"_classes");
 		
 		return trainingData;
 	}

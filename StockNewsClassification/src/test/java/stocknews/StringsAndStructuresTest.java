@@ -4,12 +4,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 
 import org.junit.Test;
 
 import de.uni_koeln.spinfo.classification.core.data.ClassifyUnit;
+import de.uni_koeln.spinfo.classification.zoneAnalysis.data.ZoneClassifyUnit;
 import de.uni_koeln.spinfo.stocknews.articles.data.Article;
 import de.uni_koeln.spinfo.stocknews.articles.io.XLSReader;
 import de.uni_koeln.spinfo.stocknews.classification.workflow.WekaClassifier;
@@ -36,14 +38,14 @@ public class StringsAndStructuresTest {
 		List<Article> articles = XLSReader.getArticlesFromXlsFile(tdFile);
 		articles = articles.subList(0, 50);
 		
-		TreeMap<Integer,TreeMap<String,Integer>> bows = new TreeMap<Integer,TreeMap<String,Integer>>();
+		TreeMap<Integer,Map<String,Integer>> bows = new TreeMap<Integer,Map<String,Integer>>();
 		for(Article art : articles){
 			TreeMap<String, Integer> bow = BagOfWordsFactory.build(art.getContent());
 			bows.put(new Random().nextInt(10000000), bow);
 		}
 		
 		WekaClassifier classifier = new WekaClassifier(bows, inputFile, "BayesClassifier");
-		TreeMap<Integer, ClassifyUnit> classify = classifier.classify();
+		TreeMap<Integer, ZoneClassifyUnit> classify = classifier.classify();
 		// TODO Rückgabe!
 		System.out.println(classify.size());
 	}

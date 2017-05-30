@@ -35,7 +35,7 @@ import de.uni_koeln.spinfo.stocknews.classification.StockNewsClassifyUnit;
 public class WekaClassifier {
 	
 	// Bag of Words
-	TreeMap<Integer,TreeMap<String,Integer>> bow;
+	TreeMap<Integer,Map<String,Integer>> bow;
 	
 	//String representation of bow
 	TreeMap<Integer,String> bowStrings;
@@ -52,12 +52,12 @@ public class WekaClassifier {
 	private ZoneJobs jobs;
 	private ExperimentConfiguration expConfig;
 	
-	public WekaClassifier(TreeMap<Integer,TreeMap<String,Integer>> bow, String tdFilename, String classifierName) throws IOException {
+	public WekaClassifier(TreeMap<Integer, Map<String, Integer>> sentenceNrsToBagOfWords, String tdFilename, String classifierName) throws IOException {
 		
 		// input/output anders regeln!!
 		
-		this.bow = bow;
-		this.bowStrings = buildBowString(bow);
+		this.bow = sentenceNrsToBagOfWords;
+		this.bowStrings = buildBowString(sentenceNrsToBagOfWords);
 		this.tdFilename = tdFilename;
 		this.outputDir = tdFilename.substring(0,tdFilename.lastIndexOf("/"));	
 		
@@ -110,11 +110,11 @@ public class WekaClassifier {
 	}
 
 	private TreeMap<Integer, String> buildBowString(
-			TreeMap<Integer, TreeMap<String, Integer>> bow) {
+			TreeMap<Integer, Map<String, Integer>> sentenceNrsToBagOfWords) {
 		TreeMap<Integer,String> sMap = new TreeMap<Integer,String>();
 		StringBuffer sb = new StringBuffer();
-			for(Integer key : bow.keySet()){
-				TreeMap<String, Integer> article = bow.get(key); 
+			for(Integer key : sentenceNrsToBagOfWords.keySet()){
+				Map<String, Integer> article = sentenceNrsToBagOfWords.get(key); 
 				for(String s : article.keySet()){
 					for(int i = 0; i<article.get(s); i++){
 						sb.append(s);
@@ -141,9 +141,9 @@ public class WekaClassifier {
 		}
 	}
 
-	public TreeMap<Integer,ClassifyUnit> classify() throws IOException, SQLException, ClassNotFoundException, NumberFormatException, ParseException {
+	public TreeMap<Integer,ZoneClassifyUnit> classify() throws IOException, SQLException, ClassNotFoundException, NumberFormatException, ParseException {
 		
-		List<ClassifyUnit> results = new ArrayList<ClassifyUnit>();
+		List<ZoneClassifyUnit> results = new ArrayList<ZoneClassifyUnit>();
 		
 		// get trainingdata from file
 		File trainingDataFile = new File(tdFilename);
@@ -204,23 +204,22 @@ public class WekaClassifier {
 	//				}
 				
 		
-				results.add(cu);
+				results.add((ZoneClassifyUnit)cu);
 			
 		}
 			
-		TreeMap<Integer,ClassifyUnit> cMap = new TreeMap<Integer,ClassifyUnit>();
-		HashMap<Integer,ClassifyUnit> tempMap = new HashMap<Integer,ClassifyUnit>();
+		TreeMap<Integer,ZoneClassifyUnit> cMap = new TreeMap<Integer,ZoneClassifyUnit>();
+		HashMap<Integer,ZoneClassifyUnit> tempMap = new HashMap<Integer,ZoneClassifyUnit>();
 		int i = 0;
 		for(Integer key : bowStrings.keySet()){
-			System.out.println(key);
 			tempMap.put(key,results.get(i));
 			i++;
 		}
 		cMap.putAll(tempMap);
 		
-		for(Integer key: bowStrings.keySet()){
-			System.out.println(key + " ," + bowStrings.get(key) + " ; \nresult: " + cMap.get(key).getContent());
-		}
+//		for(Integer key: bowStrings.keySet()){
+//			System.out.println(key + " ," + bowStrings.get(key) + " ; \nresult: " + cMap.get(key).getContent());
+//		}
 		
 		
 		return cMap;		

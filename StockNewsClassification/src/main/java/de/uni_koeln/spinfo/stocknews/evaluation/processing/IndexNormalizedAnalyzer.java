@@ -3,8 +3,13 @@ package de.uni_koeln.spinfo.stocknews.evaluation.processing;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.uni_koeln.spinfo.stocknews.stocks.data.CompanyStockTables;
 import de.uni_koeln.spinfo.stocknews.stocks.data.StockTable;
+import de.uni_koeln.spinfo.stocknews.stocks.data.Trend;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
 
 public class IndexNormalizedAnalyzer extends AbstractStockAnalyzer {
@@ -19,6 +24,11 @@ public class IndexNormalizedAnalyzer extends AbstractStockAnalyzer {
 	public IndexNormalizedAnalyzer(String indexRic){
 		super();
 		this.indexRic = indexRic;
+	}
+	
+	@Override
+	public Map<Trend, Integer> defineEvaluationClasses() {
+		return getStandardClasses();
 	}
 
 	@Override
@@ -35,7 +45,7 @@ public class IndexNormalizedAnalyzer extends AbstractStockAnalyzer {
 		LocalDate articleDay = articleDate.toLocalDate();
 		float courseRelativeToIndex = cst.courseRelativeToIndex(ric, indexRic, articleDay);
 		
-		int eval = courseRelativeToIndex>0 ? 2 : 1;
+		int eval = courseRelativeToIndex>0 ? classes.get(Trend.RISING) : classes.get(Trend.FALLING);
 		
 		return eval;
 	}
