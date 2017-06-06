@@ -1,5 +1,6 @@
 package stocknews;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -44,7 +45,7 @@ public class StringsAndStructuresTest {
 			bows.put(new Random().nextInt(10000000), bow);
 		}
 		
-		WekaClassifier classifier = new WekaClassifier(bows, inputFile, "BayesClassifier");
+		WekaClassifier classifier = new WekaClassifier(bows, new File(inputFile), "BayesClassifier");
 		TreeMap<Integer, ZoneClassifyUnit> classify = classifier.classify();
 		// TODO Rückgabe!
 		System.out.println(classify.size());

@@ -53,8 +53,17 @@ import de.uni_koeln.spinfo.stocknews.classification.StockNewsTrainingDataGenerat
 public class ZoneJobs {
 
 	public ZoneJobs() throws IOException {
+//		System.out.println("ZoneJobs: Achtung - keine Translations gesetzt");
+//		sw_filter = new StopwordFilter(new File("classification/data/stopwords.txt"));
+//		normalizer = new Normalizer();
+//		stemmer = new Stemmer();
+//		tokenizer = new FeatureUnitTokenizer();
+//		suffixTreeBuilder = new SuffixTreeFeatureGenerator();
 		System.out.println("ZoneJobs: Achtung - keine Translations gesetzt");
-		sw_filter = new StopwordFilter(new File("classification/data/stopwords.txt"));
+//		File f = new File("../../SNC/StockNewsClassification/classification/data/stopwords.txt");
+//		System.out.println(f.getAbsolutePath());
+//		sw_filter = new StopwordFilter(new File("../../SNC/StockNewsClassification/classification/data/stopwords.txt"));
+		sw_filter = new StopwordFilter(new File("C:/Users/avogt/git/SNC/StockNewsClassification/classification/data/stopwords.txt"));
 		normalizer = new Normalizer();
 		stemmer = new Stemmer();
 		tokenizer = new FeatureUnitTokenizer();
@@ -65,8 +74,10 @@ public class ZoneJobs {
 		if (stmc == null) {
 			System.out.println("ZoneJobs: Achtung - keine Translations gesetzt");
 		}
+		System.out.println("Hey!");
 		this.stmc = stmc;
-		sw_filter = new StopwordFilter(new File("classification/data/stopwords.txt"));
+		System.out.println("Hey!");
+		sw_filter = new StopwordFilter(new File("C:/Users/avogt/git/SNC/StockNewsClassification/classification/data/stopwords.txt"));
 		normalizer = new Normalizer();
 		stemmer = new Stemmer();
 		tokenizer = new FeatureUnitTokenizer();

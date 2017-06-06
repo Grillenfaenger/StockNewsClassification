@@ -40,8 +40,8 @@ public class WekaClassifier {
 	//String representation of bow
 	TreeMap<Integer,String> bowStrings;
 	
-	// Trainingdata Filename
-	String tdFilename;
+	// Trainingdata File
+	File tdFile;
 	
 	// output folder
 		String outputDir;
@@ -52,15 +52,18 @@ public class WekaClassifier {
 	private ZoneJobs jobs;
 	private ExperimentConfiguration expConfig;
 	
-	public WekaClassifier(TreeMap<Integer, Map<String, Integer>> sentenceNrsToBagOfWords, String tdFilename, String classifierName) throws IOException {
+	public WekaClassifier(TreeMap<Integer, Map<String, Integer>> sentenceNrsToBagOfWords, File tdFile, String classifierName) throws IOException {
 		
 		// input/output anders regeln!!
 		
 		this.bow = sentenceNrsToBagOfWords;
 		this.bowStrings = buildBowString(sentenceNrsToBagOfWords);
-		this.tdFilename = tdFilename;
-		this.outputDir = tdFilename.substring(0,tdFilename.lastIndexOf("/"));	
+		this.tdFile = tdFile;
+		String filePath = tdFile.getAbsolutePath();
+		System.out.println(filePath);
+		this.outputDir = filePath.substring(0,filePath.lastIndexOf("\\"));
 		
+		// TODO: Make it configurable!
 		// initialize singleToMultiClassConerter
 		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();
 		List<Integer> categories = new ArrayList<Integer>();
@@ -103,7 +106,7 @@ public class WekaClassifier {
 		
 		FeatureUnitConfiguration fuc = new FeatureUnitConfiguration(normalizeInput, useStemmer, ignoreStopwords, nGrams,
 				false, miScoredFeaturesPerClass, suffixTrees);
-		ExperimentConfiguration expConfig = new ExperimentConfiguration(fuc, quantifier, classifier, new File(tdFilename),
+		ExperimentConfiguration expConfig = new ExperimentConfiguration(fuc, quantifier, classifier, tdFile,
 				outputDir);
 		
 		return expConfig;
@@ -146,9 +149,8 @@ public class WekaClassifier {
 		List<ZoneClassifyUnit> results = new ArrayList<ZoneClassifyUnit>();
 		
 		// get trainingdata from file
-		File trainingDataFile = new File(tdFilename);
 		List<ClassifyUnit> trainingData = new ArrayList<ClassifyUnit>();
-		trainingData = jobs.getCategorizedNewsFromFile(trainingDataFile, expConfig.getFeatureConfiguration().isTreatEncoding());
+		trainingData = jobs.getCategorizedNewsFromFile(tdFile, expConfig.getFeatureConfiguration().isTreatEncoding());
 		System.out.println("added " + trainingData.size() + " training-articles from training-file ");
 		
 		if (trainingData.size() == 0) {
