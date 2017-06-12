@@ -20,6 +20,16 @@ public class RicProcessing {
 	
 	public static enum Keyword{RIC, TAG};
 	static Pattern pattern = Pattern.compile("(.*?)<(.*?)>");
+	static Pattern tagPattern = Pattern.compile("(<)((.*?))(>)");
+	
+	public static List<String> extractTags(String content) {
+		List<String> extracted = new ArrayList<String>();
+		Matcher matcher = tagPattern.matcher(content);
+		while(matcher.find()){
+			extracted.add(matcher.group(2).trim());
+		}
+		return extracted;
+	}
 	
 	public static List<String> getIndices(List<String> rics) throws IOException{
 		List<String> indices = new ArrayList<String>();

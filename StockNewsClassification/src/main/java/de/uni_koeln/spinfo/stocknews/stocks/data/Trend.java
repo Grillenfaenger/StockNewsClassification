@@ -9,6 +9,6 @@ public enum Trend {
 	}
 	
 	public String toString(){
-		return description;
+		return name();
 	}
 }

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import de.uni_koeln.spinfo.classification.core.data.ClassifyUnit;
 import de.uni_koeln.spinfo.classification.jasc.data.JASCClassifyUnit;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.data.ZoneClassifyUnit;
@@ -24,6 +29,7 @@ import de.uni_koeln.spinfo.stocknews.articles.io.XLSReader;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing;
 import de.uni_koeln.spinfo.stocknews.articles.processing.RicProcessing.Keyword;
 import de.uni_koeln.spinfo.stocknews.evaluation.data.TrainingData;
+import de.uni_koeln.spinfo.stocknews.evaluation.data.TrainingDataCollection;
 import de.uni_koeln.spinfo.stocknews.evaluation.processing.AbstractStockAnalyzer;
 import de.uni_koeln.spinfo.stocknews.evaluation.processing.VerySimpleStockAnalyzer;
 import de.uni_koeln.spinfo.stocknews.exceptions.NoQuoteDataException;
@@ -106,7 +112,7 @@ public class StockNewsTrainingDataGenerator {
 
 
 
-	private List<ClassifyUnit> trainingDataToCU(List<TrainingData> trainingData) {
+	public List<ClassifyUnit> trainingDataToCU(List<TrainingData> trainingData) {
 		List<ClassifyUnit> cu = new ArrayList<ClassifyUnit>();
 		
 		for (TrainingData td : trainingData) {
@@ -219,12 +225,21 @@ public class StockNewsTrainingDataGenerator {
 			}
 		}
 		
+		TrainingDataCollection tdColl = new TrainingDataCollection(stEval.getClass().toString(), stEval.getClasses(), remainingRics, trainingData);
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Type type = new TypeToken<TrainingDataCollection>(){}.getType();
+		String json = gson.toJson(tdColl, type);
+		System.out.println(json);
+		
 		// write trainingData file
-		List<String> printableTd = new ArrayList<String>();
-		for(TrainingData td : trainingData){
-			printableTd.add(td.toTSVString());
-		}
-		FileUtils.printList(printableTd, "output/classification/", outputFilename, ".txt");
+		
+		FileUtils.printString(json,  "output/classification/", outputFilename, ".json");
+//		List<String> printableTd = new ArrayList<String>();
+//		for(TrainingData td : trainingData){
+//			printableTd.add(td.toTSVString());
+//		}
+//		FileUtils.printList(printableTd, "output/classification/", outputFilename, ".txt");
 		
 		FileUtils.printMap(stEval.getClasses(), "output/classification/", outputFilename+"_classes");
 		

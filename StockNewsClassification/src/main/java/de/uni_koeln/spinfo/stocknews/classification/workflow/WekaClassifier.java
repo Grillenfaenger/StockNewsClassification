@@ -1,7 +1,10 @@
 package de.uni_koeln.spinfo.stocknews.classification.workflow;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -11,6 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import de.uni_koeln.spinfo.classification.core.classifier.model.Model;
 import de.uni_koeln.spinfo.classification.core.data.ClassifyUnit;
@@ -31,6 +37,8 @@ import de.uni_koeln.spinfo.classification.zoneAnalysis.workflow.ExperimentSetupU
 import de.uni_koeln.spinfo.classification.zoneAnalysis.workflow.ZoneJobs;
 import de.uni_koeln.spinfo.stocknews.articles.data.Article;
 import de.uni_koeln.spinfo.stocknews.classification.StockNewsClassifyUnit;
+import de.uni_koeln.spinfo.stocknews.evaluation.data.TrainingDataCollection;
+import de.uni_koeln.spinfo.stocknews.stocks.data.Trend;
 
 public class WekaClassifier {
 	
@@ -42,6 +50,7 @@ public class WekaClassifier {
 	
 	// Trainingdata File
 	File tdFile;
+	TrainingDataCollection tdColl;
 	
 	// output folder
 		String outputDir;
@@ -60,22 +69,30 @@ public class WekaClassifier {
 		this.bowStrings = buildBowString(sentenceNrsToBagOfWords);
 		this.tdFile = tdFile;
 		String filePath = tdFile.getAbsolutePath();
-		System.out.println(filePath);
+		deserializeTDFile();
+//		System.out.println(filePath);
 		this.outputDir = filePath.substring(0,filePath.lastIndexOf("\\"));
 		
-		// TODO: Make it configurable!
 		// initialize singleToMultiClassConerter
 		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();
-		List<Integer> categories = new ArrayList<Integer>();
-		categories.add(1);
-		translations.put(1, categories);
-		categories = new ArrayList<Integer>();
-		categories.add(2);
-		translations.put(2, categories);
-		SingleToMultiClassConverter stmc = new SingleToMultiClassConverter(2, 2, translations);
+		
+		for(Trend trend : tdColl.getClasses().keySet()){
+			List<Integer> categories = new ArrayList<Integer>();
+			int classNr = tdColl.getClasses().get(trend);
+			categories.add(classNr);
+			translations.put(classNr, categories);
+		}
+		SingleToMultiClassConverter stmc = new SingleToMultiClassConverter(tdColl.getClasses().size(), tdColl.getClasses().size(), translations);
 		
 		this.jobs = new ZoneJobs(stmc);
 		this.expConfig = getExperimentConfiguration(classifierName);
+	}
+
+	private void deserializeTDFile() throws FileNotFoundException, IOException {
+		final Gson gson = new Gson();
+		try (Reader reader = new FileReader(tdFile.getAbsolutePath())) {
+			tdColl = gson.fromJson(reader, TrainingDataCollection.class);
+		}
 	}
 
 	private ExperimentConfiguration getExperimentConfiguration(String classifierName) {
@@ -150,8 +167,9 @@ public class WekaClassifier {
 		
 		// get trainingdata from file
 		List<ClassifyUnit> trainingData = new ArrayList<ClassifyUnit>();
-		trainingData = jobs.getCategorizedNewsFromFile(tdFile, expConfig.getFeatureConfiguration().isTreatEncoding());
-		System.out.println("added " + trainingData.size() + " training-articles from training-file ");
+		trainingData = jobs.getCategorizedNewsFromTdCollection(tdColl, tdFile, expConfig.getFeatureConfiguration().isTreatEncoding());
+		System.out.println("Trainingdata generated with " + tdColl.getAnalysingMethod());
+		System.out.println("classes: " + tdColl.getClasses());
 		
 		if (trainingData.size() == 0) {
 			System.out.println(

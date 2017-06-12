@@ -35,7 +35,7 @@ public class TrainingDataGeneratorApplication {
 		AbstractStockAnalyzer indexEval = new IndexNormalizedAnalyzer("^GDAXI");
 
 		StockNewsTrainingDataGenerator tdg = new StockNewsTrainingDataGenerator(tdFile);
-		List<TrainingData> generateTrainingData = tdg.generateTrainingData(false,"output/quotes",stEval, "trainingDataTEST");
+		List<TrainingData> generateTrainingData = tdg.generateTrainingData(false,"output/quotes",stEval, "trainingDataTEST2");
 	}
 
 	

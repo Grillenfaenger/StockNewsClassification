@@ -49,6 +49,7 @@ import de.uni_koeln.spinfo.classification.zoneAnalysis.evaluation.ZoneEvaluator;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.helpers.SingleToMultiClassConverter;
 import de.uni_koeln.spinfo.classification.zoneAnalysis.preprocessing.TrainingDataGenerator;
 import de.uni_koeln.spinfo.stocknews.classification.StockNewsTrainingDataGenerator;
+import de.uni_koeln.spinfo.stocknews.evaluation.data.TrainingDataCollection;
 
 public class ZoneJobs {
 
@@ -168,6 +169,22 @@ public class ZoneJobs {
 		}
 		return paragraphs;
 	}
+	
+	public List<ClassifyUnit> getCategorizedNewsFromTdCollection(TrainingDataCollection tdColl, File tdFile,
+			boolean treatEncoding) {
+		StockNewsTrainingDataGenerator tdg = new StockNewsTrainingDataGenerator(tdFile, stmc.getNumberOfCategories(),
+				stmc.getNumberOfClasses(), stmc.getTranslations());
+		List<ClassifyUnit> paragraphs = tdg.trainingDataToCU(tdColl.getTrainingData());
+		
+		if(treatEncoding){
+			for (ClassifyUnit classifyUnit : paragraphs) {
+				String content = classifyUnit.getContent();
+				classifyUnit.setContent(EncodingProblemTreatment.normalizeEncoding(content));
+			}
+		}
+		return paragraphs;
+	}
+
 
 	public List<ClassifyUnit> getCategorizedParagraphsFromDB(Connection trainingConnection, boolean treatEncoding )
 			throws ClassNotFoundException, SQLException {
@@ -668,6 +685,8 @@ public class ZoneJobs {
 	public SingleToMultiClassConverter getStmc() {
 		return stmc;
 	}
+
+	
 
 	
 
