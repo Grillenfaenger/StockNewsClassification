@@ -48,6 +48,9 @@ public class ClassifyUnitFilter {
 			ClassifyUnit cu = cus.get(i);
 			if(!(cu.getFeatureUnits().size() < minNumberOfFUs)){
 				filtered.add(cu);
+			} else {
+				System.out.println(cu.getContent());
+				System.out.println(cus.indexOf(cu));
 			}
 		}
 		return filtered;

@@ -42,11 +42,8 @@ import de.uni_koeln.spinfo.stocknews.stocks.data.Trend;
 
 public class WekaClassifier {
 	
-	// Bag of Words
-	TreeMap<Integer,Map<String,Integer>> bow;
-	
-	//String representation of bow
-	TreeMap<Integer,String> bowStrings;
+	// texts to classify
+	TreeMap<Integer,String> texts;
 	
 	// Trainingdata File
 	File tdFile;
@@ -61,16 +58,13 @@ public class WekaClassifier {
 	private ZoneJobs jobs;
 	private ExperimentConfiguration expConfig;
 	
-	public WekaClassifier(TreeMap<Integer, Map<String, Integer>> sentenceNrsToBagOfWords, File tdFile, String classifierName) throws IOException {
+	public WekaClassifier(TreeMap<Integer, String> texts, File tdFile, String classifierName) throws IOException {
 		
-		// input/output anders regeln!!
+		this.texts = texts;
 		
-		this.bow = sentenceNrsToBagOfWords;
-		this.bowStrings = buildBowString(sentenceNrsToBagOfWords);
 		this.tdFile = tdFile;
 		String filePath = tdFile.getAbsolutePath();
 		deserializeTDFile();
-//		System.out.println(filePath);
 		this.outputDir = filePath.substring(0,filePath.lastIndexOf("\\"));
 		
 		// initialize singleToMultiClassConerter
@@ -129,24 +123,6 @@ public class WekaClassifier {
 		return expConfig;
 	}
 
-	private TreeMap<Integer, String> buildBowString(
-			TreeMap<Integer, Map<String, Integer>> sentenceNrsToBagOfWords) {
-		TreeMap<Integer,String> sMap = new TreeMap<Integer,String>();
-		StringBuffer sb = new StringBuffer();
-			for(Integer key : sentenceNrsToBagOfWords.keySet()){
-				Map<String, Integer> article = sentenceNrsToBagOfWords.get(key); 
-				for(String s : article.keySet()){
-					for(int i = 0; i<article.get(s); i++){
-						sb.append(s);
-						sb.append(" ");
-					}
-				}
-				System.out.println(sb.toString());
-				sMap.put(key, sb.toString());
-			}
-		return sMap;
-	}
-
 	private ZoneAbstractClassifier getClassifier(String classifierName) {
 		
 		switch(classifierName){
@@ -191,21 +167,24 @@ public class WekaClassifier {
 		
 		List<ClassifyUnit> classifyUnits = new ArrayList<ClassifyUnit>();
 		
-		for(Integer key : bowStrings.keySet()){
-			ZoneClassifyUnit zcu = new ZoneClassifyUnit(bowStrings.get(key));
+		for(Integer key : texts.keySet()){
+			ZoneClassifyUnit zcu = new ZoneClassifyUnit(texts.get(key));
 			classifyUnits.add(zcu);
 		}
+		
+		System.out.println("classifyUnits: " + classifyUnits.size());
 			
 			// prepare ClassifyUnits
 			classifyUnits = jobs.initializeClassifyUnits(classifyUnits);
 			classifyUnits = jobs.setFeatures(classifyUnits, expConfig.getFeatureConfiguration(), false);
 			classifyUnits = jobs.setFeatureVectors(classifyUnits, expConfig.getFeatureQuantifier(), model.getFUOrder());
 	
+		System.out.println("classifyUnits after initialization: " + classifyUnits.size());
+		
 			// 2. Classify
 			Map<ClassifyUnit, boolean[]> classified = jobs.classify(classifyUnits, expConfig, model);
 			classified = jobs.translateClasses(classified);
 	
-			
 			
 			for (ClassifyUnit cu : classified.keySet()) {
 				((ZoneClassifyUnit) cu).setClassIDs(classified.get(cu));
@@ -230,17 +209,15 @@ public class WekaClassifier {
 			
 		TreeMap<Integer,ZoneClassifyUnit> cMap = new TreeMap<Integer,ZoneClassifyUnit>();
 		HashMap<Integer,ZoneClassifyUnit> tempMap = new HashMap<Integer,ZoneClassifyUnit>();
-		int i = 0;
-		for(Integer key : bowStrings.keySet()){
-			tempMap.put(key,results.get(i));
-			i++;
+//		int i = 0;
+		System.out.println("results: " + results.size());
+		System.out.println("texts: " + texts.size());
+		for(Integer key : texts.keySet()){
+			tempMap.put(key,results.get(key));
+//			i++;
+//			System.out.println(i);
 		}
-		cMap.putAll(tempMap);
-		
-//		for(Integer key: bowStrings.keySet()){
-//			System.out.println(key + " ," + bowStrings.get(key) + " ; \nresult: " + cMap.get(key).getContent());
-//		}
-		
+		cMap.putAll(tempMap);	
 		
 		return cMap;		
 	}

@@ -244,6 +244,8 @@ public class ZoneJobs {
 			newParagraph.setActualClassID(((ZoneClassifyUnit) paragraph).getActualClassID());
 			List<String> tokens = tokenizer.tokenize(newParagraph.getContent());
 			if(tokens == null){
+				System.out.println(paragraphs.indexOf(paragraph) + ": " + paragraph.getContent());
+				toProcess.add(null);
 				continue;
 			}
 			newParagraph.setFeatureUnits(tokens);
@@ -310,7 +312,9 @@ public class ZoneJobs {
 		if (fuc.isSuffixTree()) {
 			paragraphs = suffixTreeBuilder.getSuffixTreeFreatures(paragraphs);
 		}
+		System.out.println("paragraphs: " + paragraphs.size());
 		List<ClassifyUnit> filtered = ClassifyUnitFilter.filterByFUs(paragraphs, 1);
+		System.out.println("filtered: " + filtered.size());
 		return filtered;
 	}
 
