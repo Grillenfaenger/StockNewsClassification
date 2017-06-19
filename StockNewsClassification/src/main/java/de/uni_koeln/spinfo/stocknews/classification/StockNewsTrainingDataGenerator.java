@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import com.google.gson.Gson;
@@ -194,13 +195,13 @@ public class StockNewsTrainingDataGenerator {
 		
 		System.out.println("Number of different Rics in Articles: " + ricSet.size());
 		
-		List<String> remainingRics = new ArrayList<String>();
+		Set<String> remainingRics = new TreeSet<String>();
 		remainingRics.addAll(orderedNews.keySet());
 		String dax = "^GDAXI";
 		remainingRics.add(dax);
 		
 		//	loadQuotes
-		CompanyStockTables cst = QuoteCSVReader.readStockCoursesIntoMap(quoteDir, remainingRics);
+		CompanyStockTables cst = QuoteCSVReader.readStockCoursesIntoMap(quoteDir, new ArrayList<String>(remainingRics));
 		
 //		System.out.println(cst.companyStocks.get(dax));
 //		System.out.println(cst.companyStocks.get("ONXX.O"));

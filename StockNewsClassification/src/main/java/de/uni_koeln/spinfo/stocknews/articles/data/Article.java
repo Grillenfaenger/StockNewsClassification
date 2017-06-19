@@ -24,8 +24,8 @@ public class Article implements Comparable<Article> {
 	String timeStr;
 	String title;
 	String content;
-	List<String> rics;
-	List<String> tags;
+	Set<String> rics;
+	Set<String> tags;
 	
 	
 	static Pattern pattern = Pattern.compile("(<)((.*?))(>)");
@@ -38,7 +38,7 @@ public class Article implements Comparable<Article> {
 		this.content = content;
 	}
 	
-	public Article(String index, String timeStr, String title, String content, List<String> rics, boolean extractTagsFromText) throws ParseException {
+	public Article(String index, String timeStr, String title, String content, Set<String> rics, boolean extractTagsFromText) throws ParseException {
 		this.index = index;
 		this.timeStr = timeStr;
 		this.date = parseDate(timeStr);
@@ -50,7 +50,7 @@ public class Article implements Comparable<Article> {
 		}
 	}
 	
-	public Article(String index, LocalDateTime date, String title, String content, List<String> rics, List<String> tags) throws ParseException {
+	public Article(String index, LocalDateTime date, String title, String content, Set<String> rics, Set<String> tags) throws ParseException {
 		this.index = index;
 		this.date = date;
 		this.title = title;
@@ -71,7 +71,7 @@ public class Article implements Comparable<Article> {
 		return index;
 	}
 
-	public List<String> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
 	
@@ -88,15 +88,15 @@ public class Article implements Comparable<Article> {
 		return sb.toString();
 	}
 
-	public void setTags(List<String> tags) {
+	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
 	
-	public List<String> getRics() {
+	public Set<String> getRics() {
 		return rics;
 	}
 	
-	public void setRics(List<String> rics) {
+	public void setRics(Set<String> rics) {
 		this.rics = rics;
 	}
 	
@@ -135,8 +135,8 @@ public class Article implements Comparable<Article> {
 		return result;
 	}
 	
-	private List<String> extractTags() {
-		List<String> extracted = new ArrayList<String>();
+	private Set<String> extractTags() {
+		Set<String> extracted = new TreeSet<String>();
 		Matcher matcher = pattern.matcher(content);
 		while(matcher.find()){
 			extracted.add(matcher.group(2).trim());

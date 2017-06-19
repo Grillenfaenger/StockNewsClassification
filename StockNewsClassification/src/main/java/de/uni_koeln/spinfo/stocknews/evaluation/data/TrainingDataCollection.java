@@ -2,6 +2,7 @@ package de.uni_koeln.spinfo.stocknews.evaluation.data;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.uni_koeln.spinfo.stocknews.stocks.data.Trend;
 
@@ -9,11 +10,11 @@ public class TrainingDataCollection {
 	
 	private String analysingMethod;
 	private Map<Trend,Integer> classes;
-	private List<String> coveredRics;
+	private Set<String> coveredRics;
 	private List<TrainingData> trainingData;
 	
 	public TrainingDataCollection(String analysingMethod,
-			Map<Trend, Integer> classes, List<String> coveredRics,
+			Map<Trend, Integer> classes, Set<String> coveredRics,
 			List<TrainingData> trainingData) {
 		super();
 		this.analysingMethod = analysingMethod;
@@ -30,7 +31,7 @@ public class TrainingDataCollection {
 		return classes;
 	}
 
-	public List<String> getCoveredRics() {
+	public Set<String> getCoveredRics() {
 		return coveredRics;
 	}
 

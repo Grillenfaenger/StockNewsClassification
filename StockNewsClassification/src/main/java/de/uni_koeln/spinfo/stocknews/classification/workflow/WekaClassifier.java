@@ -171,15 +171,12 @@ public class WekaClassifier {
 			ZoneClassifyUnit zcu = new ZoneClassifyUnit(texts.get(key));
 			classifyUnits.add(zcu);
 		}
-		
-		System.out.println("classifyUnits: " + classifyUnits.size());
-			
+
 			// prepare ClassifyUnits
 			classifyUnits = jobs.initializeClassifyUnits(classifyUnits);
 			classifyUnits = jobs.setFeatures(classifyUnits, expConfig.getFeatureConfiguration(), false);
 			classifyUnits = jobs.setFeatureVectors(classifyUnits, expConfig.getFeatureQuantifier(), model.getFUOrder());
-	
-		System.out.println("classifyUnits after initialization: " + classifyUnits.size());
+
 		
 			// 2. Classify
 			Map<ClassifyUnit, boolean[]> classified = jobs.classify(classifyUnits, expConfig, model);

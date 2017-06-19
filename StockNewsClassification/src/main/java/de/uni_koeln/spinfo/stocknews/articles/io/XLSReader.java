@@ -92,7 +92,7 @@ public class XLSReader {
 			
 			for (int i = 1; i < sheet.getRows(); i++) {
 				
-				List<String> articleRics = new ArrayList<String>();
+				Set<String> articleRics = new TreeSet<String>();
 				
 				seconds = sheet.getCell(1,i).getContents();
 				index = sheet.getCell(2, i).getContents();

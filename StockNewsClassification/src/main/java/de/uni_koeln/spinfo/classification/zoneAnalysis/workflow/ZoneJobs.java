@@ -312,9 +312,9 @@ public class ZoneJobs {
 		if (fuc.isSuffixTree()) {
 			paragraphs = suffixTreeBuilder.getSuffixTreeFreatures(paragraphs);
 		}
-		System.out.println("paragraphs: " + paragraphs.size());
-		List<ClassifyUnit> filtered = ClassifyUnitFilter.filterByFUs(paragraphs, 1);
-		System.out.println("filtered: " + filtered.size());
+		
+//		List<ClassifyUnit> filtered = ClassifyUnitFilter.filterByFUs(paragraphs, 1);
+		List<ClassifyUnit> filtered = paragraphs;
 		return filtered;
 	}
 

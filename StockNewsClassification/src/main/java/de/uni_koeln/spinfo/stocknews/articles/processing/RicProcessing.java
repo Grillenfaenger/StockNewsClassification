@@ -22,8 +22,8 @@ public class RicProcessing {
 	static Pattern pattern = Pattern.compile("(.*?)<(.*?)>");
 	static Pattern tagPattern = Pattern.compile("(<)((.*?))(>)");
 	
-	public static List<String> extractTags(String content) {
-		List<String> extracted = new ArrayList<String>();
+	public static Set<String> extractTags(String content) {
+		Set<String> extracted = new TreeSet<String>();
 		Matcher matcher = tagPattern.matcher(content);
 		while(matcher.find()){
 			extracted.add(matcher.group(2).trim());
@@ -51,7 +51,7 @@ public class RicProcessing {
 		Set<String> ricsCopy = new HashSet<String>();
 		
 		for(Article art : articles){
-			List<String> rics = art.getRics();
+			Set<String> rics = art.getRics();
 			ricsCopy.clear();
 			ricsCopy.addAll(rics);
 			if(rics.removeAll(indices)){
@@ -103,7 +103,7 @@ public class RicProcessing {
 		filteredNews.put("notag", new ArrayList<Article>());
 		
 		for(Article art : articles){
-			List<String> artKeys = null; 
+			Set<String> artKeys = null; 
 			if(byKeyword == Keyword.TAG){
 				artKeys = art.getTags();
 			} else if(byKeyword == Keyword.RIC) {

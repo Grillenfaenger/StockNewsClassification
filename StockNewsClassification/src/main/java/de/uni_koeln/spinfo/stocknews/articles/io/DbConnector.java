@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+
 import de.uni_koeln.spinfo.stocknews.articles.data.Article;
 
 
@@ -57,8 +59,8 @@ public class DbConnector {
 		LocalDateTime story_date_time = null;
 		String headline = null;
 		String content = null;
-		List<String> rics = new ArrayList<String>();
-		List<String> tags = new ArrayList<String>();
+		Set<String> rics = new TreeSet<String>();
+		Set<String> tags = new TreeSet<String>();
 		
 		
 		while (queryResult.next()){
@@ -90,8 +92,8 @@ public class DbConnector {
 		LocalDateTime story_date_time = null;
 		String headline = null;
 		String content = null;
-		List<String> rics = new ArrayList<String>();
-		List<String> tags = new ArrayList<String>();
+		Set<String> rics = new TreeSet<String>();
+		Set<String> tags = new TreeSet<String>();
 		
 		
 		while (queryResult.next()){
