@@ -64,7 +64,7 @@ public class ZoneJobs {
 //		File f = new File("../../SNC/StockNewsClassification/classification/data/stopwords.txt");
 //		System.out.println(f.getAbsolutePath());
 //		sw_filter = new StopwordFilter(new File("../../SNC/StockNewsClassification/classification/data/stopwords.txt"));
-		sw_filter = new StopwordFilter(new File("C:/Users/avogt/git/SNC/StockNewsClassification/classification/data/stopwords.txt"));
+		sw_filter = new StopwordFilter(new File("src/test/resources/stopwords.txt"));
 		normalizer = new Normalizer();
 		stemmer = new Stemmer();
 		tokenizer = new FeatureUnitTokenizer();

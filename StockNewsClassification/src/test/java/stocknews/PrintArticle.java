@@ -23,7 +23,7 @@ public class PrintArticle {
 			artStr.add(art.getTitle() + " " + art.getContent());
 		}
 		
-		artStr = artStr.subList(0, 5);
+		artStr = artStr.subList(0, 50);
 		
 		FileUtils.printList(artStr, "output/", "articles", ".txt");
 	}
