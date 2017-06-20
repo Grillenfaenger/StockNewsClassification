@@ -81,6 +81,30 @@ public class WekaClassifier {
 		this.jobs = new ZoneJobs(stmc);
 		this.expConfig = getExperimentConfiguration(classifierName);
 	}
+	
+public WekaClassifier(TreeMap<Integer, String> texts, File tdFile, ExperimentConfiguration expConfig) throws IOException {
+		
+		this.texts = texts;
+		
+		this.tdFile = tdFile;
+		String filePath = tdFile.getAbsolutePath();
+		deserializeTDFile();
+		this.outputDir = filePath.substring(0,filePath.lastIndexOf("\\"));
+		
+		// initialize singleToMultiClassConerter
+		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();
+		
+		for(Trend trend : tdColl.getClasses().keySet()){
+			List<Integer> categories = new ArrayList<Integer>();
+			int classNr = tdColl.getClasses().get(trend);
+			categories.add(classNr);
+			translations.put(classNr, categories);
+		}
+		SingleToMultiClassConverter stmc = new SingleToMultiClassConverter(tdColl.getClasses().size(), tdColl.getClasses().size(), translations);
+		
+		this.jobs = new ZoneJobs(stmc);
+		this.expConfig = expConfig;
+	}
 
 	private void deserializeTDFile() throws FileNotFoundException, IOException {
 		final Gson gson = new Gson();
@@ -117,6 +141,34 @@ public class WekaClassifier {
 		
 		FeatureUnitConfiguration fuc = new FeatureUnitConfiguration(normalizeInput, useStemmer, ignoreStopwords, nGrams,
 				false, miScoredFeaturesPerClass, suffixTrees);
+		ExperimentConfiguration expConfig = new ExperimentConfiguration(fuc, quantifier, classifier, tdFile,
+				outputDir);
+		
+		return expConfig;
+	}
+	
+	private ExperimentConfiguration getExperimentConfiguration(String classifierName, FeatureUnitConfiguration fuc) {
+		ZoneAbstractClassifier classifier = getClassifier(classifierName);
+		
+		int miScoredFeaturesPerClass = 0;
+		
+		AbstractFeatureQuantifier quantifier = new TFIDFFeatureQuantifier();
+		Distance distance = Distance.COSINUS;
+		
+		int knnValue = 4;
+		if(!(classifier instanceof ZoneNaiveBayesClassifier) && !(classifier instanceof SVMClassifier)){
+			classifier.setDistance(distance);
+		}
+		if (classifier instanceof ZoneKNNClassifier) {
+			((ZoneKNNClassifier) classifier).setK(knnValue);
+		}
+		
+		if ((classifier instanceof ZoneNaiveBayesClassifier)) {
+			quantifier = null;
+		} 
+		
+//		FeatureUnitConfiguration fuc = new FeatureUnitConfiguration(normalizeInput, useStemmer, ignoreStopwords, nGrams,
+//				false, miScoredFeaturesPerClass, suffixTrees);
 		ExperimentConfiguration expConfig = new ExperimentConfiguration(fuc, quantifier, classifier, tdFile,
 				outputDir);
 		
