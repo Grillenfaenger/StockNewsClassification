@@ -178,12 +178,14 @@ public WekaClassifier(TreeMap<Integer, String> texts, File tdFile, ExperimentCon
 	private ZoneAbstractClassifier getClassifier(String classifierName) {
 		
 		switch(classifierName){
-		case "KNNClassifier" :
+		case "KNN" :
 			return new ZoneKNNClassifier();
-		case "RocchioClassifier" : 
+		case "R" : 
 			return new ZoneRocchioClassifier();
-		case "BayesClassifier" : 
+		case "NB" : 
 			return new ZoneNaiveBayesClassifier();
+		case "SVM" :
+			return new SVMClassifier();
 		default : 
 			return new ZoneNaiveBayesClassifier();	
 		}
