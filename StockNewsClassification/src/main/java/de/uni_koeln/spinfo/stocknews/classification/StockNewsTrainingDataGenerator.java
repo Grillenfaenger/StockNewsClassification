@@ -246,5 +246,73 @@ public class StockNewsTrainingDataGenerator {
 		
 		return trainingData;
 	}
+	
+	public List<TrainingData> generateTrainingData_new(boolean singleRicOnly, String quoteDir, AbstractStockAnalyzer evaluator, String outputFilename) throws NumberFormatException, IOException, ParseException{
+		// getArticles
+		List<Article> articles = XLSReader.getArticlesFromXlsFile(tdFile.getAbsolutePath());
+		
+		articles = RicProcessing.filterIndicesFromNews(articles);
+		
+		if(singleRicOnly){
+			articles = RicProcessing.getSingleTopicArticles(articles);
+		}
+		
+		// all rics covered by articles
+		Set<String> ricSet = RicProcessing.createRicSet(articles);
+		System.out.println("Number of different Rics in Articles: " + ricSet.size());
+		
+		String dax = "^GDAXI";
+		ricSet.add(dax);
+		
+		//	loadQuotes
+		CompanyStockTables cst = QuoteCSVReader.readStockCoursesIntoMap(quoteDir, new ArrayList<String>(ricSet));
+		evaluator.setCst(cst);
+		
+		// generate TrainingData
+		List<TrainingData> trainingData = new ArrayList<TrainingData>();
+		List<TrainingData> tdBuffer = new ArrayList<TrainingData>();
+		Set<String>noQuoteData = new HashSet<String>();
+		
+		articleLoop: for(Article art : articles){
+			int eval = 0;
+			for(String ric : art.getRics()){
+				try {
+					TrainingData td = new TrainingData(ric,art,evaluator);
+					System.out.println(td);
+					if(eval == 0){
+						eval = td.getEvaluation();
+					} else if (eval == td.getEvaluation()){
+						tdBuffer.add(td);
+					} else if (eval != td.getEvaluation()){
+						System.out.println("Article yields contradictory evaluations. " + art);
+						tdBuffer.clear();
+						continue articleLoop;
+					}
+				} catch(NoQuoteDataException e){
+					System.out.println(e.getMessage());
+					noQuoteData.add(ric);
+					continue;
+				}
+			}
+			trainingData.addAll(tdBuffer);
+			tdBuffer.clear();
+		}
+		
+		ricSet.removeAll(noQuoteData);
+		System.out.println("overall trainingData: " + trainingData.size());
+		
+		TrainingDataCollection tdColl = new TrainingDataCollection(evaluator.getClass().toString(), evaluator.getClasses(), ricSet, trainingData);
+		
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Type type = new TypeToken<TrainingDataCollection>(){}.getType();
+		String json = gson.toJson(tdColl, type);
+		System.out.println(json);
+		
+		// write trainingData file
+		FileUtils.printString(json,  "output/classification/", outputFilename, ".json");
+		FileUtils.printMap(evaluator.getClasses(), "output/classification/", outputFilename+"_classes");
+		
+		return trainingData;
+	}
 
 }
