@@ -63,9 +63,8 @@ public class WekaClassifier {
 		this.texts = texts;
 		
 		this.tdFile = tdFile;
-		String filePath = tdFile.getAbsolutePath();
 		deserializeTDFile();
-		this.outputDir = filePath.substring(0,filePath.lastIndexOf("\\"));
+		this.outputDir = tdFile.getParentFile().getAbsolutePath();
 		
 		// initialize singleToMultiClassConerter
 		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();
@@ -87,9 +86,8 @@ public WekaClassifier(TreeMap<Integer, String> texts, File tdFile, ExperimentCon
 		this.texts = texts;
 		
 		this.tdFile = tdFile;
-		String filePath = tdFile.getAbsolutePath();
 		deserializeTDFile();
-		this.outputDir = filePath.substring(0,filePath.lastIndexOf("\\"));
+		this.outputDir = tdFile.getParentFile().getAbsolutePath();
 		
 		// initialize singleToMultiClassConerter
 		Map<Integer, List<Integer>> translations = new HashMap<Integer, List<Integer>>();
@@ -184,7 +182,7 @@ public WekaClassifier(TreeMap<Integer, String> texts, File tdFile, ExperimentCon
 			return new ZoneRocchioClassifier();
 		case "NB" : 
 			return new ZoneNaiveBayesClassifier();
-		case "SVM" :
+		case "SVM" : 
 			return new SVMClassifier();
 		default : 
 			return new ZoneNaiveBayesClassifier();	
